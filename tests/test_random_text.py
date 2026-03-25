@@ -1,5 +1,5 @@
 import unittest
-from src.Patterns.random_text import random_text
+from src.random_text import random_text
 from unittest.mock import patch
 
 class TestRandomText(unittest.TestCase):

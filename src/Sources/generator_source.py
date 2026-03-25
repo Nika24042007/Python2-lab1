@@ -1,4 +1,4 @@
-from src.Patterns.random_text import random_text
+from src.random_text import random_text
 from random import randint
 
 class Generator_source:
