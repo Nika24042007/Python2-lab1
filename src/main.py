@@ -1,10 +1,10 @@
 import logging
-from random import randint
-from src.Patterns.pattern_source import Sources
 from src.Sources.file_source import File_Source
+from random import randint
 from src.Sources.api_source import Api_source
 from src.Sources.generator_source import Generator_source
-from  src.Constans.constans_type import TYPE_SOURCE
+from src.Constans.constans_type import TYPE_SOURCE
+from src.Patterns.pattern_source import Sources
 
 
 def main() -> None:
@@ -44,9 +44,10 @@ def main() -> None:
                         print(text_task)
                         logging.info(text_task)
                     elif command == "get_all_tasks":
-                        text_task = source_dict[source_name].get_all_tasks()
-                        print(text_task)
-                        logging.info(text_task)
+                        text_tasks = source_dict[source_name].get_all_tasks()
+                        for task in text_tasks:
+                            print(task)
+                            logging.info(task)
                 else:
                     print("Error: non-compliance with protocol")
                     logging.error("Error: non-compliance with protocol")

@@ -1,4 +1,5 @@
 import logging
+from src.Task.task_api import TaskApi
 
 
 class Api_source:
@@ -21,11 +22,9 @@ class Api_source:
         task = input("Enter task: ")
         logging.info(f"Enter task: {task}")
         self.id += 1
-        task_dict = {}
-        task_dict[self.id] = task
-        return str(task_dict)
+        return TaskApi().create_task(self.id, task)
 
-    def get_all_tasks(self) ->str:
+    def get_all_tasks(self) ->list:
         """
         Получение всех заданий
 
@@ -34,13 +33,13 @@ class Api_source:
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         n = int(input("Enter the number of tasks: "))
         logging.info(f"Enter the number of tasks: {str(n)}")
-        tasks_dict = {}
+        tasks_list = []
         for i in range(n):
             task = input("Enter task: ")
             logging.info(f"Enter task: {task}")
             self.id += 1
-            tasks_dict[self.id] = task
-        return str(tasks_dict)
+            tasks_list.append[TaskApi().create_task(self.id, task)]
+        return tasks_list
 
     @staticmethod
     def create_source(name:str) -> object:
