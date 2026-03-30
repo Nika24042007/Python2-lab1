@@ -1,8 +1,13 @@
 import re
 
 class ValidateData:
-    def __set__name(self, owner, name):
+    def __set_name__(self, owner, name):
         self.private_name = "_" +name
+
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            return self
+        return getattr(instance, self.private_name, None)
 
     def __set__(self, instance, value:str):
         if re.search(r"\d{2}.\d{2}.\d{4}", value):
@@ -24,10 +29,15 @@ class ValidateData:
             raise ValueError("Uncorrect type of data")
         
 class ValidatorPriority():
-    def __set__name(self, owner, name):
+    def __set_name__(self, owner, name):
         self.private_name = "_" + name
 
-    def __setter__(self, instance, value:str):
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            return self
+        return getattr(instance, self.private_name, None)
+
+    def __set__(self, instance, value:str):
         if value in ["High", "Normal", "Very high"]:
             return setattr(instance, self.private_name, value)
         else:

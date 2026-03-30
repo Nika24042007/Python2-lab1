@@ -1,5 +1,6 @@
 from src.random_text import random_text
 from random import randint
+from src.Task.task_generator import TaskGenerator
 
 class Generator_source:
     def __init__(self, name: str) -> None:
@@ -17,23 +18,21 @@ class Generator_source:
 
         :return: Строка с задвнием и ее id
         """
-        task_dict = {}
         self.id += 1
-        task_dict[self.id] = random_text()
-        return str(task_dict)
+        return TaskGenerator.create_task(self.id, random_text())
 
-    def get_all_tasks(self) ->str:
+    def get_all_tasks(self) ->list:
         """
         Получение всех заданий из источника
 
         :return: Строка содержащие id и само задание
         """
         n = randint(1, 20)
-        tasks_dict = {}
+        tasks_list = []
         for i in range(n):
             self.id += 1
-            tasks_dict[self.id] = random_text()
-        return str(tasks_dict)
+            tasks_list.append(TaskGenerator.create_task(self.id, random_text()))
+        return tasks_list
 
     @staticmethod
     def create_source(name:str) -> object:

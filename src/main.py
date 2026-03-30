@@ -1,4 +1,5 @@
 import logging
+import traceback
 from src.Sources.file_source import File_Source
 from random import randint
 from src.Sources.api_source import Api_source
@@ -40,14 +41,24 @@ def main() -> None:
             elif source_name in list(source_dict.keys()) and command != "create_source":
                 if isinstance(source_dict[source_name], Sources):
                     if command == "get_task":
-                        text_task = source_dict[source_name].get_task()
-                        print(text_task)
-                        logging.info(text_task)
+                        try:
+                            text_task = source_dict[source_name].get_task()
+                            print(text_task)
+                            logging.info(text_task)
+                        except ValueError as e:
+                            traceback.print_exc()
+                            print(e)
+                            logging.error(e)
                     elif command == "get_all_tasks":
-                        text_tasks = source_dict[source_name].get_all_tasks()
-                        for task in text_tasks:
-                            print(task)
-                            logging.info(task)
+                        try:
+                            text_tasks = source_dict[source_name].get_all_tasks()
+                            for task in text_tasks:
+                                print(task)
+                                print("\n")
+                                logging.info(task)
+                        except:
+                            print(e)
+                            logging.error(e)
                 else:
                     print("Error: non-compliance with protocol")
                     logging.error("Error: non-compliance with protocol")

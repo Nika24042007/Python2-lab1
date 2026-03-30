@@ -22,7 +22,7 @@ class Api_source:
         task = input("Enter task: ")
         logging.info(f"Enter task: {task}")
         self.id += 1
-        return TaskApi().create_task(self.id, task)
+        return TaskApi.create_task(self.id, task)
 
     def get_all_tasks(self) ->list:
         """
@@ -38,7 +38,7 @@ class Api_source:
             task = input("Enter task: ")
             logging.info(f"Enter task: {task}")
             self.id += 1
-            tasks_list.append[TaskApi().create_task(self.id, task)]
+            tasks_list.append[TaskApi.create_task(self.id, task)]
         return tasks_list
 
     @staticmethod

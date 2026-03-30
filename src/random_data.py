@@ -1,5 +1,5 @@
 import random
-from datetime import datetime 
+from datetime import date 
 
 def random_date(start_year=1970, end_year=2030):
     year = random.randint(start_year, end_year)
@@ -14,4 +14,4 @@ def random_date(start_year=1970, end_year=2030):
     else:
         max_day = 31
     day = random.randint(1, max_day)
-    return datetime.date(year, month, day)
+    return date(year, month, day)
