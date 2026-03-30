@@ -19,8 +19,8 @@ class Api_source:
         :return: Строка с заданием и id
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
-        task = input("Enter task: ")
-        logging.info(f"Enter task: {task}")
+        task = input("Enter payloud: ")
+        logging.info(f"Enter payloud: {task}")
         self.id += 1
         return TaskApi.create_task(self.id, task)
 
@@ -35,8 +35,8 @@ class Api_source:
         logging.info(f"Enter the number of tasks: {str(n)}")
         tasks_list = []
         for i in range(n):
-            task = input("Enter task: ")
-            logging.info(f"Enter task: {task}")
+            task = input("Enter payloud: ")
+            logging.info(f"Enter payloud: {task}")
             self.id += 1
             tasks_list.append[TaskApi.create_task(self.id, task)]
         return tasks_list

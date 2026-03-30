@@ -1,5 +1,6 @@
 import json
 import logging
+from src.Task.task_file import TaskFile
 
 class File_Source:
     def __init__(self, name: str, file_name: str)->None:
@@ -34,12 +35,17 @@ class File_Source:
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         try:
             with open(f"src//File_test//{self.file_name}.json", "r", encoding="utf-8") as f:
-                tasks = json.load(f)
-                print(f"Choice id of task: {list(tasks.keys())} ")
-                logging.info(f"Choice id if task: {list(tasks.keys())} ")
-                id = input("id: ")
-                logging.info(f"id: {id}")
-                return tasks[id]
+                text = json.load(f)
+                list_id = []
+                for task in text:
+                    list_id.append(task["id"])
+                ch_id = int(input(f"Enter id from list {list_id}: "))
+                logging.info(f"Enter id from list {list_id}: {ch_id}")
+                for task in text:
+                    if task["id"] == ch_id:
+                        task_dict = task["id"]
+                task = TaskFile.create_task(task_dict)
+                return task
         except:
             logging.error("Error: no such file or file is empty")
             return "Error: no such file or file is empty"
@@ -55,7 +61,11 @@ class File_Source:
         try:
             with open(f"src//File_test//{self.file_name}.json", "r", encoding="utf-8") as f:
                 tasks = json.load(f)
-                return str(tasks)
+                list_tasks = []
+                for task in tasks:
+                    task_st = TaskFile.create_task(task)
+                    list_tasks.append(task_st)
+            return list_tasks
         except:
             logging.error("Error: no such file or file is empty")
             return "Error: no such file or file is empty"

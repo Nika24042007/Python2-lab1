@@ -10,7 +10,7 @@ class ValidateData:
         return getattr(instance, self.private_name, None)
 
     def __set__(self, instance, value:str):
-        if re.search(r"\d{2}.\d{2}.\d{4}", value):
+        if re.search(r"^\d{2}.\d{2}.\d{4}$", value):
             day = int(value.split(".")[0])
             month = int(value.split(".")[1])
             year = int(value.split(".")[-1])

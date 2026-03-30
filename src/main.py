@@ -46,7 +46,6 @@ def main() -> None:
                             print(text_task)
                             logging.info(text_task)
                         except ValueError as e:
-                            traceback.print_exc()
                             print(e)
                             logging.error(e)
                     elif command == "get_all_tasks":

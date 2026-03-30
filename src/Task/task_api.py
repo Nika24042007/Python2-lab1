@@ -17,8 +17,8 @@ class TaskApi():
     @property
     def deadline(self):
         data = list(map(int, self.data_end.split(".")))
-        st_data = list(map(int, self.data_start.split(".")))
-        return date(data[-1], data[1], data[0])-date(st_data[-1], st_data[1], st_data[0])
+        st_data = date.today()
+        return date(data[-1], data[1], data[0])-st_data
 
     @property
     def status(self):
