@@ -14,7 +14,7 @@ class ValidateData:
             day = int(value.split(".")[0])
             month = int(value.split(".")[1])
             year = int(value.split(".")[-1])
-            if month > 0 and month < 13 and year > 2020 and day > 0:
+            if month > 0 and month < 13 and year > 1700 and day > 0:
                 if month in [1, 3, 5, 7, 8, 10, 12] and day < 32:
                     return setattr(instance, self.private_name, value)
                 elif month in [4, 6, 9, 11] and day < 31:

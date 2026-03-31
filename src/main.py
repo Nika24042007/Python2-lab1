@@ -55,7 +55,7 @@ def main() -> None:
                                 print(task)
                                 print("\n")
                                 logging.info(task)
-                        except:
+                        except ValueError as e:
                             print(e)
                             logging.error(e)
                 else:

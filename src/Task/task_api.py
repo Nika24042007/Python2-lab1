@@ -28,11 +28,11 @@ class TaskApi():
             return "deadline over"
 
     @property
-    def data_end(self):
+    def data_end(self)->str:
         return self._data_end
     
     @data_end.setter
-    def data_end(self, value):
+    def data_end(self, value)->None:
         data = list(map(int, value.split(".")))
         st_data = list(map(int, self.data_start.split(".")))
         if date(data[-1], data[1], data[0]) > date(st_data[-1], st_data[1], st_data[0]):
@@ -42,7 +42,7 @@ class TaskApi():
     
 
     @staticmethod
-    def create_task(id:int, payloud:str):
+    def create_task(id:int, payloud:str)->object:
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         data_start = input("Enter start data(dd.mm.yyyy): ")
         logging.info(f"Enter start data(dd.mm.yyyy): {data_start}")
@@ -52,7 +52,7 @@ class TaskApi():
         logging.info(f"Enter prioriti(High, Normal, Very high): {priority}")
         return TaskApi(id, payloud, priority, data_start, data_end)
     
-    def __str__(self):
+    def __str__(self)->str:
         
         return f"id: {self.id}\n payload: {self.payloud}\n priority: {self.priority}\n status: {self.status}\n start: {self.data_start}\n end: {self.data_end}\n deadline: {self.deadline}\n"
         
