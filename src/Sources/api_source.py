@@ -38,7 +38,7 @@ class Api_source:
             task = input("Enter payloud: ")
             logging.info(f"Enter payloud: {task}")
             self.id += 1
-            tasks_list.append[TaskApi.create_task(self.id, task)]
+            tasks_list.append(TaskApi.create_task(self.id, task))
         return tasks_list
 
     @staticmethod

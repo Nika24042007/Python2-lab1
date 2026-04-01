@@ -19,7 +19,9 @@ class ValidateData:
                     return setattr(instance, self.private_name, value)
                 elif month in [4, 6, 9, 11] and day < 31:
                     return setattr(instance, self.private_name, value)
-                elif month == 2 and year % 4 == 0 and (year % 100 != 0 or year % 400 == 0):
+                elif month == 2 and year % 4 == 0 and (year % 100 != 0 or year % 400 == 0) and day< 30:
+                    return setattr(instance, self.private_name, value)
+                elif month == 2 and day < 29:
                     return setattr(instance, self.private_name, value)
                 else:
                     raise ValueError("No such day in calander")

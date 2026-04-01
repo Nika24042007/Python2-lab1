@@ -41,17 +41,18 @@ class File_Source:
                     list_id.append(task["id"])
                 ch_id = int(input(f"Enter id from list {list_id}: "))
                 logging.info(f"Enter id from list {list_id}: {ch_id}")
+                count = 0
                 for task in text:
                     if task["id"] == ch_id:
-                        task_dict = task["id"]
-                task = TaskFile.create_task(task_dict)
-                return task
+                        task_text = TaskFile.create_task(text[count])
+                    count += 1
+                return task_text
         except:
             logging.error("Error: no such file or file is empty")
-            return "Error: no such file or file is empty"
+            raise ValueError("Error: no such file or file is empty")
             
 
-    def get_all_tasks(self) ->str:
+    def get_all_tasks(self) ->list:
         """
         Получение всех заданий
 
@@ -63,12 +64,13 @@ class File_Source:
                 tasks = json.load(f)
                 list_tasks = []
                 for task in tasks:
+                    print(task)
                     task_st = TaskFile.create_task(task)
                     list_tasks.append(task_st)
-            return list_tasks
+                return list_tasks
         except:
             logging.error("Error: no such file or file is empty")
-            return "Error: no such file or file is empty"
+            raise ValueError("Error: no such file or file is empty")
 
     
         
