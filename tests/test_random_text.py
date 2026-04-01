@@ -7,8 +7,8 @@ class TestRandomText(unittest.TestCase):
     Тесты для функции получения рандомного текста задания
     """
     def test_get_random_text(self):
-        with(patch("src.Patterns.random_text.randint") as mock_randint,
-             patch("src.Patterns.random_text.choice") as mock_choice):
+        with(patch("src.random_text.randint") as mock_randint,
+             patch("src.random_text.choice") as mock_choice):
             mock_randint.return_value = 4
             mock_choice.side_effect = ["Apple", "water", "cat", "dog"]
 

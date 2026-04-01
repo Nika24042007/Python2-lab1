@@ -41,7 +41,7 @@ class TestMain(unittest.TestCase):
             mock_print.assert_any_call('{"1": "task"}')
 
     def test_create_source_exist(self):
-        with (patch('builtins.input', side_effect=['create_source', 'dup', 'file','create_source', 'dup', 'file','exit']), \
+        with (patch('builtins.input', side_effect=['create_source', 'dup', 'file','create_source', 'dup', 'file','exit']),
              patch('builtins.print') as mock_print,
              patch('src.main.logging.error') as mock_log_error,
              patch('src.main.TYPE_SOURCE') as mock_type_source,

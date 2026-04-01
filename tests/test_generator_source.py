@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from src.Sources.generator_source import Generator_source
-from src.Task.task_generator import TaskGenerator   # добавлен импорт
+from src.Task.task_generator import TaskGenerator
 
 class TestGeneratorSource(unittest.TestCase):
     """
