@@ -12,11 +12,11 @@ class Api_source:
         self.name = name
         self.id = 0
 
-    def get_task(self) ->str:
+    def get_task(self) ->object:
         """
         Получение одного задания
 
-        :return: Строка с заданием и id
+        :return: Объект класса TaskApi
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         task = input("Enter payloud: ")
@@ -28,7 +28,7 @@ class Api_source:
         """
         Получение всех заданий
 
-        :return: Строка с заданиями и id
+        :return: Список с объектами класса TaskApi
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         n = int(input("Enter the number of tasks: "))

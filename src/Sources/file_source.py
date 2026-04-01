@@ -26,11 +26,11 @@ class File_Source:
         logging.info(f"Enter file name: {file_name}")
         return File_Source(name, file_name)
 
-    def get_task(self) ->str:
+    def get_task(self) ->object:
         """
         Получение одного задания
 
-        :return: Строка с заданием
+        :return: Объект класса TaskFile
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         try:
@@ -56,7 +56,7 @@ class File_Source:
         """
         Получение всех заданий
 
-        :return: Строка с заданиями и их id
+        :return: Список с объектами класса TaskFile
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         try:

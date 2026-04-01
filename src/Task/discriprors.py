@@ -1,7 +1,10 @@
 import re
 
 class ValidateData:
-    def __set_name__(self, owner, name):
+    """
+    Проверка дат на соответствие
+    """
+    def __set_name__(self, owner, name:str):
         self.private_name = "_" +name
 
     def __get__(self, instance, owner=None):
@@ -31,7 +34,10 @@ class ValidateData:
             raise ValueError("Uncorrect type of data")
         
 class ValidatorPriority():
-    def __set_name__(self, owner, name):
+    """
+    проверка названий на соответствие
+    """
+    def __set_name__(self, owner, name:str):
         self.private_name = "_" + name
 
     def __get__(self, instance, owner=None):

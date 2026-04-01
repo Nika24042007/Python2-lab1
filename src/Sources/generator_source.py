@@ -12,11 +12,11 @@ class Generator_source:
         self.name = name
         self.id = 0
 
-    def get_task(self) ->str:
+    def get_task(self) ->object:
         """
         Получение одного задания
 
-        :return: Строка с задвнием и ее id
+        :return: Объект класса TaskGenerator
         """
         self.id += 1
         return TaskGenerator.create_task(self.id, random_text())
@@ -25,7 +25,7 @@ class Generator_source:
         """
         Получение всех заданий из источника
 
-        :return: Строка содержащие id и само задание
+        :return: Список с объектами класса TaskGenerator
         """
         n = randint(1, 20)
         tasks_list = []
