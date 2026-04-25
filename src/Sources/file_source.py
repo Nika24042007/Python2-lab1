@@ -1,17 +1,20 @@
 import json
 import logging
-from src.Task.task_file import TaskFile
+from src.TaskQueue.task_queue_file import TaskQueueFile
 
 class File_Source:
-    def __init__(self, name: str, file_name: str)->None:
+    def __init__(self, name: str, file_name: str, text:dict)->None:
         """
         Иницилизация источника-файла
 
         :param name: Имя источника
         :param file_name: имя файла формата json
+        :param text: содержание файла
         """
         self.name = name
         self.file_name = file_name
+        self.text = text
+        self.tasks = TaskQueueFile(text, filter=None)
 
     @staticmethod
     def create_source(name:str)->object:
@@ -24,53 +27,46 @@ class File_Source:
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         file_name = input("Enter file name: ")
         logging.info(f"Enter file name: {file_name}")
-        return File_Source(name, file_name)
-
-    def get_task(self) ->object:
-        """
-        Получение одного задания
-
-        :return: Объект класса TaskFile
-        """
-        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         try:
-            with open(f"src//File_test//{self.file_name}.json", "r", encoding="utf-8") as f:
+            with open(f"src//File_test//{file_name}.json", "r", encoding="utf-8") as f:
                 text = json.load(f)
-                list_id = []
-                for task in text:
-                    list_id.append(task["id"])
-                ch_id = int(input(f"Enter id from list {list_id}: "))
-                logging.info(f"Enter id from list {list_id}: {ch_id}")
-                count = 0
-                for task in text:
-                    if task["id"] == ch_id:
-                        task_text = TaskFile.create_task(text[count])
-                    count += 1
-                return task_text
+                return File_Source(name, file_name, text)
         except:
             logging.error("Error: no such file or file is empty")
             raise ValueError("Error: no such file or file is empty")
+        
+
+    def get_task(self) ->None:
+        """
+        Получение одного задания и его печать
+
+        """
+        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+        try:
+            print(next(self.tasks))
+        except ValueError as e:
+            print(e)
+            logging.error(e)
+
             
 
-    def get_all_tasks(self) ->list:
+    def get_all_tasks(self, filter:str) ->None:
         """
-        Получение всех заданий
+        Получение всех заданий и из печать
 
-        :return: Список с объектами класса TaskFile
+        :param filter: слова для фильтрации
         """
         logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
         try:
-            with open(f"src//File_test//{self.file_name}.json", "r", encoding="utf-8") as f:
-                tasks = json.load(f)
-                list_tasks = []
-                for task in tasks:
-                    print(task)
-                    task_st = TaskFile.create_task(task)
-                    list_tasks.append(task_st)
-                return list_tasks
-        except:
-            logging.error("Error: no such file or file is empty")
-            raise ValueError("Error: no such file or file is empty")
+            tasks = TaskQueueFile(self.text, filter)
+            for task in tasks:
+                print(task)
+                print("\n")
+            return
+        except ValueError as e:
+            print(e)
+            logging.error(e)
+        
 
     
         

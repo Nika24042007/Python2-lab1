@@ -1,72 +1,102 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock, call
 from src.Sources.generator_source import Generator_source
-from src.Task.task_generator import TaskGenerator
+
 
 class TestGeneratorSource(unittest.TestCase):
     """
-    Тесты для класса источника-генератора
+    Тесты для класса Generator_source
     """
-    def test_create_source(self):
-        source = Generator_source.create_source("test")
-        self.assertIsInstance(source, Generator_source)
-        self.assertEqual(source.name, "test")
-        self.assertEqual(source.id, 0)
 
-    def test_get_task_one(self):
-        with (patch('src.Sources.generator_source.random_text') as mock_random_text):
-            mock_random_text.return_value = "Task"
-            source = Generator_source("test")
-            result = source.get_task()
-            self.assertEqual(source.id, 1)
-            self.assertIsInstance(result, TaskGenerator)
-            self.assertEqual(result.id, 1)
-            self.assertEqual(result.payloud, "Task")
-            mock_random_text.assert_called_once()
+    def test_create_source(self):
+        with (patch('src.Sources.generator_source.randint') as mock_randint):
+            mock_randint.return_value = 10
+            source = Generator_source.create_source("test")
+            mock_randint.assert_called_once_with(5, 100)
+            self.assertIsInstance(source, Generator_source)
+            self.assertEqual(source.name, "test")
+            self.assertEqual(source.max_len, 10)
+
+    def test_get_task(self):
+        with (patch('src.Sources.generator_source.TaskQueueGen') as MockTaskQueue,
+             patch('builtins.print') as mock_print):
+
+            mock_task = MagicMock()
+            mock_task.__str__ = MagicMock(return_value="Task object")
+            mock_queue = MagicMock()
+            mock_queue.__next__ = MagicMock(return_value=mock_task)
+            MockTaskQueue.return_value = mock_queue
+
+            source = Generator_source("test", 5)
+            source.get_task()
+
+            MockTaskQueue.assert_called_once_with(5, filter="None")
+            mock_queue.__next__.assert_called_once()
+            mock_print.assert_called_once()
 
     def test_get_all_tasks(self):
-        with (patch('src.Sources.generator_source.randint') as mock_randint,
-             patch('src.Sources.generator_source.random_text') as mock_random_text):
-            mock_randint.return_value = 3
-            mock_random_text.side_effect = ["Task 1", "Task 2", "Task 3"]
-            source = Generator_source("test")
-            result = source.get_all_tasks()
-            mock_randint.assert_called_once_with(1, 20)
-            self.assertEqual(mock_random_text.call_count, 3)
-            self.assertEqual(source.id, 3)
-            self.assertIsInstance(result, list)
-            self.assertEqual(len(result), 3)
-            for i, task in enumerate(result, start=1):
-                self.assertIsInstance(task, TaskGenerator)
-                self.assertEqual(task.id, i)
-                self.assertEqual(task.payloud, f"Task {i}")
+        with (patch('src.Sources.generator_source.TaskQueueGen') as MockTaskQueue,
+             patch('builtins.print') as mock_print):
 
-    def test_get_all_tasks_min(self):
-        with (patch('src.Sources.generator_source.randint') as mock_randint,
-             patch('src.Sources.generator_source.random_text') as mock_random_text):
-            mock_randint.return_value = 1
-            mock_random_text.return_value = "One"
-            source = Generator_source("test")
-            result = source.get_all_tasks()
-            self.assertEqual(source.id, 1)
-            self.assertIsInstance(result, list)
-            self.assertEqual(len(result), 1)
-            self.assertIsInstance(result[0], TaskGenerator)
-            self.assertEqual(result[0].id, 1)
-            self.assertEqual(result[0].payloud, "One")
+            task1 = MagicMock()
+            task2 = MagicMock()
+            tasks_iter = iter([task1, task2])
+            mock_task_queue = MagicMock()
+            mock_task_queue.__iter__ = MagicMock(return_value=tasks_iter)
+            MockTaskQueue.return_value = mock_task_queue
 
-    def test_get_all_tasks_max(self):
-        with (patch('src.Sources.generator_source.randint') as mock_randint,
-             patch('src.Sources.generator_source.random_text') as mock_random_text):
-            mock_randint.return_value = 20
-            mock_random_text.return_value = "Task"
-            source = Generator_source("test2")
-            result = source.get_all_tasks()
-            self.assertEqual(source.id, 20)
-            self.assertIsInstance(result, list)
-            self.assertEqual(len(result), 20)
-            ids = [task.id for task in result]
-            self.assertIn(1, ids)
-            self.assertIn(20, ids)
-            for task in result:
-                self.assertEqual(task.payloud, "Task")
+            source = Generator_source("test", 3)
+            source.get_all_tasks("High")
+
+            expected_calls = [call(3, filter="None"), call(3, "High")]
+            MockTaskQueue.assert_has_calls(expected_calls)
+            self.assertEqual(MockTaskQueue.call_count, 2)
+
+            mock_print.assert_any_call(task1)
+            mock_print.assert_any_call("\n")
+            mock_print.assert_any_call(task2)
+            mock_print.assert_any_call("\n")
+            self.assertEqual(mock_print.call_count, 4)
+
+    def test_get_task_value_error(self):
+        with (patch('src.Sources.generator_source.TaskQueueGen') as MockTaskQueue,
+             patch('builtins.print') as mock_print,
+             patch('src.Sources.generator_source.logging.error') as mock_log_error):
+
+            mock_queue = MagicMock()
+            mock_queue.__next__ = MagicMock(side_effect=ValueError("Test error"))
+            MockTaskQueue.return_value = mock_queue
+
+            source = Generator_source("test", 1)
+            source.get_task()
+
+            mock_log_error.assert_called_once()
+            mock_print.assert_called_once()
+
+    def test_get_all_tasks_value_error(self):
+        with (patch('src.Sources.generator_source.TaskQueueGen') as MockTaskQueue,
+             patch('builtins.print') as mock_print,
+             patch('src.Sources.generator_source.logging.error') as mock_log_error):
+
+            mock_task_queue = MagicMock()
+            mock_task_queue.__iter__ = MagicMock(side_effect=ValueError("Iter error"))
+            MockTaskQueue.return_value = mock_task_queue
+
+            source = Generator_source("test", 2)
+            source.get_all_tasks("Normal")
+
+            mock_log_error.assert_called_once()
+            mock_print.assert_called_once()
+
+    def test_get_all_tasks_empty(self):
+        with (patch('src.Sources.generator_source.TaskQueueGen') as MockTaskQueue,
+             patch('builtins.print') as mock_print):
+
+            mock_task_queue = MagicMock()
+            mock_task_queue.__iter__ = MagicMock(return_value=iter([]))
+            MockTaskQueue.return_value = mock_task_queue
+
+            source = Generator_source("test", 0)
+            source.get_all_tasks("None")
+
+            mock_print.assert_not_called()

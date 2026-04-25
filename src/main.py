@@ -49,12 +49,22 @@ def main() -> None:
                             print(e)
                             logging.error(e)
                     elif command == "get_all_tasks":
+                        filter = input("Select filter (None, Status, Priority): ")
+                        if filter not in ["None", "Status", "Priority"]:
+                            print("Error: no such filter")
+                            logging.error("Error: no such filter")
+                        elif filter  == "Status":
+                            filter = input("Select status (Over, In work): ")
+                            if filter not in ["Over", "In work"]:
+                                print("Error: no such status")
+                                logging.error("Error: no such status")
+                        elif filter == "Priority":
+                            filter = input("Select priopity (High, Normal, Very high): ")
+                            if filter not in ["High", "Normal", "Very high"]:
+                                print("Error: no such priority")
+                                logging.error("Error: no such priority")
                         try:
-                            text_tasks = source_dict[source_name].get_all_tasks()
-                            for task in text_tasks:
-                                print(task)
-                                print("\n")
-                                logging.info(task)
+                            source_dict[source_name].get_all_tasks(filter)
                         except ValueError as e:
                             print(e)
                             logging.error(e)

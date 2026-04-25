@@ -1,38 +1,49 @@
-from src.random_text import random_text
 from random import randint
-from src.Task.task_generator import TaskGenerator
+import logging
+from src.TaskQueue.task_queue_gen import TaskQueueGen
 
 class Generator_source:
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, n: int) -> None:
         """
         Иницилизация источника генератора
 
         :param name: Название источника
+        :param n: максимальное количество задач в источнике
         """
         self.name = name
-        self.id = 0
+        self.max_len = n
+        self.task = TaskQueueGen(self.max_len, filter="None")
 
-    def get_task(self) ->object:
+    def get_task(self) ->None:
         """
-        Получение одного задания
+        Получение одного задания и его печать
 
-        :return: Объект класса TaskGenerator
         """
-        self.id += 1
-        return TaskGenerator.create_task(self.id, random_text())
+        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+        try:
+            print(next(self.task))
+            return
+        except ValueError as e:
+            print(e)
+            logging.error(e)
+            return
+    def get_all_tasks(self, filter: str) ->None:
+        """
+        Получение всех заданий из источника и их печать
 
-    def get_all_tasks(self) ->list:
+        :param filter: слова для фильтрации
         """
-        Получение всех заданий из источника
-
-        :return: Список с объектами класса TaskGenerator
-        """
-        n = randint(1, 20)
-        tasks_list = []
-        for i in range(n):
-            self.id += 1
-            tasks_list.append(TaskGenerator.create_task(self.id, random_text()))
-        return tasks_list
+        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+        try:
+            tasks = TaskQueueGen(self.max_len, filter)
+            for task in tasks:
+                print(task)
+                print("\n")
+            return
+        except ValueError as e:
+            print(e)
+            logging.error(e)
+            return
 
     @staticmethod
     def create_source(name:str) -> object:
@@ -42,4 +53,5 @@ class Generator_source:
         :param name: Имя источника
         :retun: Объект-источник
         """
-        return Generator_source(name)
+        n = randint(5, 100)
+        return Generator_source(name, n)
