@@ -1,0 +1,9 @@
+from typing import Protocol, runtime_checkable
+
+@runtime_checkable
+class Handler(Protocol):
+    def in_work_normal(self): ...
+
+    def in_work_high(self): ...
+
+    def in_work_very_high(self): ...

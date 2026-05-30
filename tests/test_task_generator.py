@@ -5,7 +5,7 @@ from src.Task.task_generator import TaskGenerator
 
 class TestTaskGenerator(unittest.TestCase):
     """
-    Тесты для генирируемого задания
+    Тесты для генерируемого задания
     """
     def test_init(self):
         task = TaskGenerator(id=1,
@@ -27,17 +27,23 @@ class TestTaskGenerator(unittest.TestCase):
         with (patch('src.Task.task_generator.choice') as mock_choice,
              patch('src.Task.task_generator.random_date') as mock_rand_date,
              patch('src.Task.task_generator.randint') as mock_randint,
-             patch('src.Task.task_generator.date') as mock_date):
+             patch('src.Task.task_generator.date') as mock_date,
+             patch('src.Task.task_generator.random_text') as mock_random_text):
+
             mock_choice.return_value = "Normal"
             mock_rand_date.return_value = date(2025, 1, 1)
             mock_randint.return_value = 10
             mock_date.today.return_value = date(2025, 1, 5)
+            mock_random_text.return_value = "some payloud" 
+
             task1 = TaskGenerator.create_task(42, "some payloud")
 
             mock_choice.assert_called_once()
             mock_rand_date.assert_called_once()
             mock_randint.assert_called_once_with(1, 365)
             mock_date.today.assert_called_once()
+            mock_random_text.assert_called_once()
+
             self.assertEqual(task1.id, 42)
             self.assertEqual(task1.payloud, "some payloud")
             self.assertEqual(task1.priority, "Normal")
@@ -48,6 +54,7 @@ class TestTaskGenerator(unittest.TestCase):
 
             mock_randint.return_value = 10
             mock_date.today.return_value = date(2025, 1, 20)
+            mock_random_text.return_value = "another payloud"
             task2 = TaskGenerator.create_task(43, "another payloud")
             self.assertEqual(task2.deadline.days, -9)
             self.assertEqual(task2.status, "deadline over")

@@ -26,12 +26,20 @@ class TaskFile():
     def data_end(self)->date:
         return self._data_end
     
+    @property
+    def data_start(self)->date:
+        return self._data_start
+    
+    @data_start.setter
+    def data_start(self, value:str)->None:
+        st_data = list(map(int, value.split("-")))
+        self._data_start = date(st_data[-1], st_data[1], st_data[0])
+
     @data_end.setter
     def data_end(self, value:str)->None:
-        data = list(map(int, value.split(".")))
-        st_data = list(map(int, self.data_start.split(".")))
-        if date(data[-1], data[1], data[0]) > date(st_data[-1], st_data[1], st_data[0]):
-            self._data_end = value
+        data = list(map(int, value.split("-")))
+        if date(data[-1], data[1], data[0]) > self.data_start:
+            self._data_end = date(data[-1], data[1], data[0])
         else:
             raise ValueError("Uncorrect end data")
 
@@ -42,8 +50,7 @@ class TaskFile():
 
         :return: значение дедлайна
         """
-        end = list(map(int, self.data_end.split(".")))
-        return date(end[-1], end[-2], end[-3]) - date.today()
+        return self.data_end - date.today()
     
     @property
     def status(self)->str:
@@ -58,7 +65,7 @@ class TaskFile():
             return "there's still time"
 
     @staticmethod
-    def create_task(text: dict)->object:
+    def create_task(n:int, text_all: dict)->object:
         """
         Создание задания из файла
 
@@ -66,6 +73,7 @@ class TaskFile():
         :return: Объект класса TaskFile
         """
         try:
+            text = text_all[n]
             id = text["id"]
             payloud = text["payloud"]
             data_start = text["data_start"]

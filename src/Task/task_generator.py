@@ -26,7 +26,7 @@ class TaskGenerator():
         self.status = status 
 
     @staticmethod
-    def create_task(id:int, payloud:str)->object:
+    def create_task(id:int, text:str)->object:
         """
         Создание задания для генератора
 
@@ -34,6 +34,7 @@ class TaskGenerator():
         :param payloud:
         :return: Объект класса TaskGenerator
         """
+        payloud = random_text()
         now = date.today()
         priority = choice(PRIORITY_TYPE)
         data_start = random_date()

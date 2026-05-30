@@ -1,6 +1,6 @@
 from random import randint
 import logging
-from src.TaskQueue.task_queue_gen import TaskQueueGen
+from src.TaskQueue.task_queue import TaskQueue
 
 class Generator_source:
     def __init__(self, name: str, n: int) -> None:
@@ -12,41 +12,32 @@ class Generator_source:
         """
         self.name = name
         self.max_len = n
-        self.task = TaskQueueGen(self.max_len, filter="None")
+        self.task = TaskQueue(self.max_len,"None", filter="None", type="generator")
 
-    def get_task(self) ->None:
+    async def get_task(self) ->str:
         """
         Получение одного задания и его печать
 
         """
-        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
-        try:
-            print(next(self.task))
-            return
-        except ValueError as e:
-            print(e)
-            logging.error(e)
-            return
-    def get_all_tasks(self, filter: str) ->None:
+        async for task in self.task:
+            return task
+    
+    async def get_all_tasks(self, filter: str) ->list:
         """
         Получение всех заданий из источника и их печать
 
         :param filter: слова для фильтрации
         """
-        logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
-        try:
-            tasks = TaskQueueGen(self.max_len, filter)
-            for task in tasks:
-                print(task)
-                print("\n")
-            return
-        except ValueError as e:
-            print(e)
-            logging.error(e)
-            return
+        
+        tasks = TaskQueue(self.max_len,"None", filter, "generator")
+        tasks_list = []
+        async for task in tasks:
+            tasks_list.append(task)
+        return tasks_list
+        
 
     @staticmethod
-    def create_source(name:str) -> object:
+    async def create_source(name:str) -> object:
         """
         Создание источника с заданным именем
 
